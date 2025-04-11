@@ -1,0 +1,42 @@
+services:
+  api:
+    build: .
+    container_name: blog-api
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=yourpassword
+      - DB_DATABASE=blogdb
+      - JWT_SECRET=Hoss@Home#01120399909
+    volumes:
+      - ./src:/app/src
+    command: npm run start:dev
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: blog-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=blogdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
