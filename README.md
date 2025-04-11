@@ -55,8 +55,6 @@ The application follows a modular architecture using NestJS framework:
 - **Blogs Module**: Handles blog post CRUD operations
 - **Guards**: Implements authentication and role-based access control
 
-### Project Setup
-
 #### Prerequisites
 
 - Node.js (v16 or higher)
@@ -121,7 +119,9 @@ docker-compose up -d
 
 ### API Documentation
 
-The API documentation is available at `/api-docs` when the server is running. Below are the key endpoints:
+The API documentation is available at
+1- postman collection included
+2- `/api-docs` when the server is running. Below are the key endpoints:
 
 #### Authentication
 
