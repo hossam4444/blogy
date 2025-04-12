@@ -20,16 +20,21 @@ const getDatabaseConfig = () => {
     };
   }
 
+  const host = process.env.RAILWAY_PRIVATE_DOMAIN || process.env.DB_HOST || 'localhost';
+
   return {
     type: 'postgres',
-    host: process.env.DB_HOST,
+    host,
     port: +(process.env.DB_PORT || 5432),
-    username: process.env.DB_USERNAME,
+    username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_DATABASE || 'railway',
     entities: [User, Blog],
     migrations: [SeedAdminAndBlogs1681171200000],
     synchronize: false,
+    ssl: process.env.NODE_ENV === 'production' ? {
+      rejectUnauthorized: false
+    } : false
   };
 };
 
