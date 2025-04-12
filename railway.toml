@@ -1,0 +1,19 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+buildCommand = "docker buildx build --platform linux/amd64 -t 1hoss/blogy:latest ."
+
+[deploy]
+startCommand = "npm run start:prod"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[env]
+DB_HOST = "postgres"
+DB_PORT = "5432"
+DB_USERNAME = "postgres"
+DB_PASSWORD = "yourpassword"
+DB_DATABASE = "blogdb"
+NODE_ENV = "production"
