@@ -11,9 +11,7 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 
 [env]
-DB_HOST = "postgres"
-DB_PORT = "5432"
-DB_USERNAME = "postgres"
-DB_PASSWORD = "yourpassword"
-DB_DATABASE = "blogdb"
+DATABASE_URL = "${{Postgres.DATABASE_URL}}"
 NODE_ENV = "production"
+PORT = "3000"
+JWT_SECRET = "Hoss@Home"
