@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Blog } from '../blogs/blogs.entity';
-import { SeedAdminAndBlogs1681171200000 } from './migrations/1681171200000-SeedAdminAndBlogs';
+import { SeedUsersAndBlogs1745273712671 } from './migrations/1745273712671-SeedUsersAndBlogs';
 import { config } from 'dotenv';
 
 config();
@@ -15,7 +15,7 @@ const getDatabaseConfig = () => {
         rejectUnauthorized: false
       },
       entities: [User, Blog],
-      migrations: [SeedAdminAndBlogs1681171200000],
+      migrations: [SeedUsersAndBlogs1745273712671],
       synchronize: false,
     };
   }
@@ -25,12 +25,12 @@ const getDatabaseConfig = () => {
   return {
     type: 'postgres',
     host,
-    port: +(process.env.DB_PORT || 5432),
+    port: +(process.env.DB_PORT || 5433),
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE || 'railway',
+    database: process.env.DB_DATABASE || 'blogdb',
     entities: [User, Blog],
-    migrations: [SeedAdminAndBlogs1681171200000],
+    migrations: [SeedUsersAndBlogs1745273712671],
     synchronize: false,
     ssl: process.env.NODE_ENV === 'production' ? {
       rejectUnauthorized: false
