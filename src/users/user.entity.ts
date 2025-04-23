@@ -5,7 +5,7 @@ const HASH_ROUNDS = process.env.HASH_ROUNDS ? parseInt(process.env.HASH_ROUNDS) 
 export class User {
 
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   @Column({ type: 'varchar', length: 50 })
   firstName: string;
@@ -16,7 +16,7 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   password: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
@@ -35,8 +35,7 @@ export class User {
   @BeforeUpdate()
   hashPassword() {
     if (this.password) {
-      const rounds = process.env.HASH_ROUNDS ? parseInt(process.env.HASH_ROUNDS) : 10;
-      this.password = hashSync(this.password, rounds);
+      this.password = hashSync(this.password, HASH_ROUNDS);
     }
   }
 
