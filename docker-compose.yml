@@ -8,16 +8,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      # Add dependency on Redis
       redis:
-        condition: service_started # Or service_healthy if using a healthcheck for redis
+        condition: service_started
     environment:
+      - DATABASE_URL=postgresql://${DB_USERNAME:-postgres}:${DB_PASSWORD:-yourpassword}@postgres:5432/${DB_DATABASE:-blogdb}?sslmode=disable
+      - REDISHOST=redis
+      - REDISPORT=6379
+
+      - NODE_ENV=development
       - PORT=3000
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=yourpassword
-      - DB_DATABASE=blogdb
       - JWT_SECRET=Hoss@Home#01120399909
       - HASH_ROUNDS=10
       - ADMIN_FIRST_NAME=Admin
@@ -25,15 +24,13 @@ services:
       - ADMIN_EMAIL=admin@blog.com
       - ADMIN_PASSWORD=admin123
       - ADMIN_PHONE=+1234567890
-      # Add Redis connection details
-      - REDIS_HOST=redis # Use the service name defined below
-      - REDIS_PORT=6379 # Default Redis port
-      # i will debend on that later for SSl
-      - NODE_ENV=development
+
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=yourpassword
+      - DB_DATABASE=blogdb
 
     volumes:
       - ./src:/app/src
-      # - ./ssl:/app/ssl  # volume for SSL certificates
     command: sh -c "sleep 5 && npm run migration:run && npm run start:dev"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
@@ -68,11 +65,6 @@ services:
       - '6379:6379'
     volumes:
       - redisdata:/data
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   pgdata:
