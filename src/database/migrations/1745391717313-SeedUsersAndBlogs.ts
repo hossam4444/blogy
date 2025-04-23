@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 import slugify from 'slugify';
 config();
 
-export class SeedUsersAndBlogs1745273712671 implements MigrationInterface {
+export class SeedUsersAndBlogs1745391717313 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
 
     const userCheck = await queryRunner.query(`SELECT COUNT(*) FROM "user" WHERE "email" = $1`, [
