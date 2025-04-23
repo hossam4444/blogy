@@ -1,41 +1,43 @@
-import { DataSource } from 'typeorm';
-import { User } from '../users/user.entity';
-import { Blog } from '../blogs/blogs.entity';
-import { SeedUsersAndBlogs1745273712671 } from './migrations/1745273712671-SeedUsersAndBlogs';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
 
 config();
 
-const getDatabaseConfig = () => {
-  if (process.env.DATABASE_URL) {
-    return {
-      url: process.env.DATABASE_URL,
-      type: 'postgres',
-      ssl: {
-        rejectUnauthorized: false
-      },
-      entities: [User, Blog],
-      migrations: [SeedUsersAndBlogs1745273712671],
-      synchronize: false,
-    };
-  }
+const nodeEnv = process.env.NODE_ENV;
+const databaseUrl = process.env.DATABASE_URL;
+const isProduction = nodeEnv === 'production';
 
-  const host = process.env.RAILWAY_PRIVATE_DOMAIN || process.env.DB_HOST || 'localhost';
+if (!databaseUrl) {
+  console.error(
+    '[data-source.ts] CRITICAL ERROR: DATABASE_URL environment variable is not set!',
+  );
+  console.error(
+    '[data-source.ts] Ensure it is defined in your .env file (for local CLI) or docker-compose.yml or Railway variables.',
+  );
+  throw new Error('DATABASE_URL environment variable is required but not provided.');
+}
 
-  return {
-    type: 'postgres',
-    host,
-    port: +(process.env.DB_PORT || 5433),
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE || 'blogdb',
-    entities: [User, Blog],
-    migrations: [SeedUsersAndBlogs1745273712671],
-    synchronize: false,
-    ssl: process.env.NODE_ENV === 'production' ? {
-      rejectUnauthorized: false
-    } : false
-  };
+const maskedUrl = databaseUrl.replace(/:([^:]+)@/, ':<password>@');
+console.log(`[data-source.ts] NODE_ENV: ${nodeEnv}`);
+console.log(`[data-source.ts] isProduction: ${isProduction}`);
+console.log(`[data-source.ts] Using DATABASE_URL: ${maskedUrl}`);
+
+const sslConfig = isProduction
+  ? { rejectUnauthorized: false }
+  : false;
+
+console.log(`[data-source.ts] SSL Configuration determined as:`, sslConfig);
+
+export const AppDataSourceOptions: DataSourceOptions = {
+  type: 'postgres',
+  url: databaseUrl,
+  synchronize: false,
+  logging: !isProduction ? ['query', 'error'] : ['error'],
+
+  entities: [__dirname + '/../**/*.entity{.js,.ts}'],
+  migrations: [__dirname + '/migrations/*{.js,.ts}'],
+  migrationsTableName: 'typeorm_migrations',
+  ssl: sslConfig,
 };
 
-export const AppDataSource = new DataSource(getDatabaseConfig() as any);
+export default new DataSource(AppDataSourceOptions);
