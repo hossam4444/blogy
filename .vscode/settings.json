@@ -9,6 +9,8 @@
     "isready",
     "notin",
     "pgdata",
-    "redisdata"
+    "redisdata",
+    "REDISHOST",
+    "REDISPORT"
   ]
 }
