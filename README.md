@@ -10,9 +10,12 @@ A modern blog API built with NestJS, TypeORM, and PostgreSQL, featuring user aut
 - Advanced Blog Search & Filtering
 - Blog Tags Support
 - Secure Password Handling
-- API Documentation (Swagger and postman collection)
+- API Documentation (Swagger and Postman collection)
 
 ## Documentation
+
+### production swagger link (railway deployed)
+https://blogy-production.up.railway.app/api-docs/
 
 ### ERD (Entity Relationship Diagram)
 
